@@ -51,7 +51,7 @@ spec:
               memory: 1Gi
           env:
             - name: PROFILE
-              value: test
+              value: pro
             - name: TZ
               value: Asia/Shanghai
           volumeMounts:

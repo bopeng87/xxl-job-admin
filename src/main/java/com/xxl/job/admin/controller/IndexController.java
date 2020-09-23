@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -53,12 +51,11 @@ public class IndexController {
 	
 	@RequestMapping("/toLogin")
 	@PermissionLimit(limit=false)
-	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) {
+	public String toLogin(HttpServletRequest request, HttpServletResponse response) {
 		if (loginService.ifLogin(request, response) != null) {
-			modelAndView.setView(new RedirectView("/",true,false));
-			return modelAndView;
+			return "redirect:/";
 		}
-		return new ModelAndView("login");
+		return "login";
 	}
 	
 	@RequestMapping(value="login", method=RequestMethod.POST)
