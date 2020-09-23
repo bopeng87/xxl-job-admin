@@ -78,7 +78,7 @@
     <springProfile name="pro">
         <appender name="logstash" class="net.logstash.logback.appender.LogstashUdpSocketAppender">
             <param name="Encoding" value="UTF-8"/>
-            <host>logstash-api.elk.svc.cluster.local</host>
+            <host>logstash.k8s.lemonbox.com.cn</host>
             <port>45044</port>
             <layout class="net.logstash.logback.layout.LogstashLayout">
                 <customFields>{"appname":"xxl-job-admin"}</customFields>
