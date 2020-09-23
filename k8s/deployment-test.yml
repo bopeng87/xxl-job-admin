@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: xxl-job-admin-test
+spec:
+  selector:
+    app: xxl-job-admin-test
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      name: http
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xxl-job-admin-test
+  annotations:
+    kubernetes.io/change-cause: registry.cn-beijing.aliyuncs.com/lemonbox/xxl-job-admin:{{GIT_COMMIT}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xxl-job-admin-test
+  template:
+    metadata:
+      labels:
+        app: xxl-job-admin-test
+    spec:
+      containers:
+        - name: xxl-job-admin-test
+          image: registry.cn-beijing.aliyuncs.com/lemonbox/xxl-job-admin:{{GIT_COMMIT}}
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 3000
+            initialDelaySeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 3000
+            initialDelaySeconds: 60
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          env:
+            - name: PROFILE
+              value: test
+            - name: TZ
+              value: Asia/Shanghai
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: date-config
+              readOnly: true
+      imagePullSecrets:
+        - name: aliyun-registry
+      volumes:
+        - name: date-config
+          hostPath:
+            path: /etc/localtime
